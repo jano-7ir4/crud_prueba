@@ -15,6 +15,19 @@ public class ItemRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public Item save(Item item) {
+        String sql;
+
+        if (item.getId() == null) {
+            sql = "INSERT INTO item (id,name, description, price) VALUES (?, ?, ?, ?)";
+            jdbcTemplate.update(sql,item.getId(), item.getName(), item.getDescription(), item.getPrice());
+        } else {
+            sql = "UPDATE item SET name = ?, description = ?, price = ? WHERE id = ?";
+            jdbcTemplate.update(sql, item.getName(), item.getDescription(), item.getPrice(), item.getId());
+        }
+        return item;
+    }
+
 
     public Item getItem(Integer id) {
         String sql = "SELECT * FROM item WHERE id = ?";
@@ -28,8 +41,9 @@ public class ItemRepository {
         });
     }
 
-
-
-
+    public void deleteItem(Integer id) {
+        String sql = "DELETE FROM item WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
 
 }
